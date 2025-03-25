@@ -1,26 +1,186 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand colors */
+  --primary: #FE0300;         /* Main brand color - bright red */
+  --secondary: #FE6766;       /* Light red for accents */
+  --background: #F4E6D6;      /* Beige for background */
+  --text: #560121;            /* Dark red for text */
+  --highlight: #F1B474;       /* Light orange for highlights */
+  --off-white: #F9F9F9;       /* Slight off-white for subtle contrast */
+  --dark-bg: #410118;         /* Deep burgundy for dark backgrounds */
+  --light-bg: #FFFFFF;        /* White for light backgrounds */
+  --accent-light: #FFDEE9;    /* Light coral accent - complementary to primary */
+  --accent-dark: #3D0000;     /* Very dark red - for depth elements */
+  --soft-gray: #E0E0E0;       /* Neutral gray for less emphasis */
+  --custom-red: #CF0404;      /* Custom red color */
+  --submit: #730e33;          /* Submit brown for submit buttons */
+  --custom-blue: #2542A6;     /* Custom blue color */
+  --white: #FFFFFF;           /* white  color */
+  --manjal-lite: #FFC07B;     /* Custom manjal lite color */
+  --facebook: #0964fe;        /* Facebook color */
+  --twitter: #000000;         /* Twitter color */
+  --instagram: #E1306C;       /* Instagram color */
+  --linkedin: #0077B5;        /* LinkedIn color */
+  --youtube: #FF0000;         /* YouTube color */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* In global CSS */
+@font-face {
+  font-family: 'Poppins';
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2') format('woff2');
+  font-display: swap;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Custom utility classes */
+.bg-primary { background-color: var(--primary); }
+.bg-secondary { background-color: var(--secondary); }
+.bg-background { background-color: var(--background); }
+.bg-text { background-color: var(--text); }
+.bg-highlight { background-color: var(--highlight); }
+.bg-off-white { background-color: var(--off-white); }
+.bg-dark-bg { background-color: var(--dark-bg); }
+.bg-light-bg { background-color: var(--light-bg); }
+.bg-accent-light { background-color: var(--accent-light); }
+.bg-accent-dark { background-color: var(--accent-dark); }
+.bg-custom-red { background-color: var(--custom-red); } /* Custom red background */
+.bg-submit { background-color: var(--submit); } 
+.bg.custom-blue { background-color: var(--custom-blue); } /* Custom blue background */
+.bg.white { background-color: var(--custom-baby-pink); } /* Custom baby pink background */
+.bg.manjal-lite { background-color: var(--manjal-lite); } /* Custom manjal lite background */
+.bg-facebook { background-color: var(--facebook); } /* Facebook background */
+.bg-twitter { background-color: var(--twitter); } /* Twitter background */
+.bg-instagram { background-color: var(--instagram); } /* Instagram background */
+.bg-linkedin { background-color: var(--linkedin); } /* LinkedIn background */
+.bg-youtube { background-color: var(--youtube); } /* YouTube background */
+
+
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-background { color: var(--background); }
+.text-text { color: var(--text); }
+.text-highlight { color: var(--highlight); }
+.text-off-white { color: var(--off-white); }
+.text-dark-bg { color: var(--dark-bg); }
+.text-light-bg { color: var(--light-bg); }
+.text-accent-light { color: var(--accent-light); }
+.text-accent-dark { color: var(--accent-dark); }
+.text-custom-red { color: var(--custom-red); } /* Custom red text */
+.text-facebook { color: var(--facebook); } /* Facebook text */
+.text-twitter { color: var(--twitter); } /* Twitter text */
+.text-instagram { color: var(--instagram); } /* Instagram text */
+.text-linkedin { color: var(--linkedin); } /* LinkedIn text */
+.text-youtube { color: var(--youtube); } /* YouTube text */
+
+
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(135deg, var(--dark-bg) 0%, #2C0010 100%);
+}
+
+.bg-gradient-light {
+  background: linear-gradient(135deg, var(--light-bg) 0%, var(--accent-light) 100%);
+}
+
+/* Add hover effects */
+.hover\:text-primary:hover { color: var(--primary); }
+.hover\:text-secondary:hover { color: var(--secondary); }
+.hover\:text-highlight:hover { color: var(--highlight); }
+.hover\:bg-primary:hover { background-color: var(--primary); }
+.hover\:bg-secondary:hover { background-color: var(--secondary); }
+.hover\:bg-highlight:hover { background-color: var(--highlight); }
+
+/* Product Card Styles */
+.product-card {
+  width: 100%;
+  height: 100%;
+  min-height: 400px; /* Adjust this value as needed */
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+/* FAQ Section Styles */
+.faq-section {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* .faq-item {
+  border-radius: 10px;
+  box-shadow: 6px 6px 12px #bec3c9, -6px -6px 12px #ffffff;
+  transition: all 0.3s ease;
+} */
+
+/* .faq-question {
+  padding: 15px 20px;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  background-color: var(--manjal-lite);
+  color: var(--text);
+}
+
+.faq-question:hover,
+.faq-question.active {
+  box-shadow: inset 6px 6px 12px #bec3c9, inset -6px -6px 12px var(--manjal-lite);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+  border-radius: 0 0 10px 10px;
+  background-color: var(--manjal-lite);
+  color: var(--text);
+}
+
+.faq-answer p {
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+}
+
+.faq-answer.active {
+  max-height: 1000px;
+  padding: 15px 20px;
+  box-shadow: inset 6px 6px 12px #bec3c9, inset -6px -6px 12px var(--manjal-lite);
+} */
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.faq-answer p.active {
+  animation: slideDown 0.5s ease forwards;
+}
+
+
+
+
+/* Claud Color: #bd5d3a*/
