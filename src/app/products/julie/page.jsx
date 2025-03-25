@@ -82,26 +82,26 @@ export default function JuliePage() {
       </motion.div>
 
         {/* Enhanced Vertical Timeline Section */}
-<motion.div
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true, margin: "-100px" }}
-  variants={fadeIn}
-  className="mb-16"
->
-  <h2 className="text-3xl font-bold text-blue-400 mb-10 text-center">Development Timeline</h2>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeIn}
+          className="mb-16"
+        >
+        <h2 className="text-3xl font-bold text-blue-400 mb-10 text-center">Development Timeline</h2>
   
   <div className="relative py-8">
     {/* Timeline connector line - centered on mobile too */}
-    <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-blue-500 transform -translate-x-1/2"></div>
+    <div className="absolute left-1/2 top-[5%] bottom-[11%] w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-blue-500 transform -translate-x-1/2"></div>
     
     {/* Announcement milestone */}
     <div className="flex flex-col md:flex-row items-center mb-16 relative">
-    <div className="w-full md:w-1/2 md:pr-12 text-center md:text-right order-2 md:order-1 mt-16 md:mt-0">
-      <motion.div
-        whileHover={{ scale: 1.03 }}
-        className="bg-blue-900 bg-opacity-30 p-6 rounded-lg border-l-4 md:border-l-0 md:border-r-4 border-blue-500 shadow-lg inline-block"
-      >
+      <div className="w-full md:w-1/2 md:pr-12 text-center md:text-right order-2 md:order-1 mt-16 md:mt-0">
+        <motion.div
+          whileHover={{ scale: 1.03 }}
+          className="bg-blue-900 bg-opacity-100 p-6 rounded-lg border-l-4 md:border-l-0 md:border-r-4 border-blue-500 shadow-lg inline-block"
+        >
           <h3 className="text-2xl font-bold text-blue-300 mb-2">Announcement</h3>
           <p className="text-gray-300 mb-4">Project J.U.L.I.E officially revealed to the public</p>
           <p className="text-3xl font-bold text-white bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
@@ -140,7 +140,7 @@ export default function JuliePage() {
       <div className="w-full md:w-1/2 md:pl-12 text-center md:text-left mt-6 md:mt-0 order-3">
         <motion.div
           whileHover={{ scale: 1.03 }}
-          className="bg-indigo-900 bg-opacity-30 p-6 rounded-lg border-l-4 border-indigo-500 shadow-lg inline-block"
+          className="bg-indigo-900 bg-opacity-100 p-6 rounded-lg border-l-4 border-indigo-500 shadow-lg inline-block"
         >
           <h3 className="text-2xl font-bold text-indigo-300 mb-2">Development Phases</h3>
           <p className="text-gray-300 mb-4">Multi-foundational training across various modalities</p>
@@ -154,7 +154,7 @@ export default function JuliePage() {
       <div className="w-full md:w-1/2 md:pr-12 text-center md:text-right order-2 md:order-1 mt-6 md:mt-0">
         <motion.div
           whileHover={{ scale: 1.03 }}
-          className="bg-violet-900 bg-opacity-30 p-6 rounded-lg border-l-4 md:border-l-0 md:border-r-4 border-violet-500 shadow-lg inline-block"
+          className="bg-violet-900 bg-opacity-100 p-6 rounded-lg border-l-4 md:border-l-0 md:border-r-4 border-violet-500 shadow-lg inline-block"
         >
           <h3 className="text-2xl font-bold text-violet-300 mb-2">Beta Testing</h3>
           <p className="text-gray-300 mb-4">Limited access for selected partners</p>
