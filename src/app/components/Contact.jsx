@@ -1,6 +1,6 @@
 // src\app\components\Contact.jsx
 "use client";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 import { FaArrowRight, FaEnvelope, FaMapMarkerAlt, FaPhoneAlt} from 'react-icons/fa';
 export default function Contact() {
@@ -24,6 +24,59 @@ export default function Contact() {
   // Lighter shade of #fec07a - a soft peachy orange
   const lighterShade = "#fed5a8";
 
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [submitStatus, setSubmitStatus] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      // Use your actual API route
+      const response = await fetch('/api/submit-contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <section id="contact" className="py-16 md:py-20 bg-gradient-to-b from-background to-gray-50 relative overflow-hidden">
       {/* Background decorative elements */}
@@ -31,6 +84,17 @@ export default function Contact() {
       <div className="absolute bottom-0 right-0 w-40 md:w-80 h-40 md:h-80 bg-red-100 rounded-full opacity-20 translate-x-1/3 translate-y-1/3"></div>
       
       <div className="container mx-auto px-4 relative z-10">
+        {/* Status Messages */}
+        {submitStatus === 'success' && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+            Thank you! Your message has been sent successfully.
+          </div>
+        )}
+        {submitStatus === 'error' && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+            Oops! Something went wrong. Please try again.
+          </div>
+        )}
         <div className="text-center mb-12 md:mb-16">
           <span className="text-custom-red font-medium text-sm uppercase tracking-wider">Get in Touch</span>
           <h2 className="text-3xl md:text-4xl font-bold text-text mt-2 mb-4">Contact Us</h2>
@@ -98,32 +162,33 @@ export default function Contact() {
             </div>
           </div>
           
-          {/* Contact Form Section - Adjusted layout */}
-          <div 
-            id="contact-form" 
-            className="bg-white rounded-2xl shadow-xl p-6 md:p-8 transform transition-all duration-700 opacity-0 translate-y-8 delay-300 h-full flex flex-col"
-          >
+          {/* Contact Form */}
+          <div id="contact-form" className="bg-white rounded-2xl shadow-xl p-6 md:p-8 h-full flex flex-col">
             <h3 className="text-xl md:text-2xl font-bold text-text mb-6 border-b pb-4">Send us a message</h3>
-            <form className="flex flex-col justify-between h-full">
-              {/* Form inputs with adjusted layout */}
+            
+            <form onSubmit={handleSubmit} className="flex flex-col justify-between h-full">
               <div className="space-y-4 flex-grow">
-                {/* Full-width name input */}
                 <div className="relative">
                   <input 
                     type="text" 
                     className="w-full p-3 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-red/50 transition-all text-text placeholder-gray-500" 
                     placeholder="Your Name" 
                     id="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
                 
-                {/* Full-width email input */}
                 <div className="relative">
                   <input 
                     type="email" 
                     className="w-full p-3 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-red/50 transition-all text-text placeholder-gray-500" 
                     placeholder="Your Email" 
                     id="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
                 
@@ -133,33 +198,34 @@ export default function Contact() {
                     className="w-full p-3 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-red/50 transition-all text-text placeholder-gray-500" 
                     placeholder="Subject" 
                     id="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
                   />
-                </div>
-                
-                {/* Reduced height textarea */}
+                </div>               
                 <div className="relative">
                   <textarea 
                     className="w-full p-3 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-red/50 transition-all text-text placeholder-gray-500" 
                     placeholder="Your Message"
                     rows="12"
                     id="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
                   ></textarea>
                 </div>
               </div>
-              
-              {/* Submit button with lighter shade highlight on hover */}
               <div className="mt-4">
                 <button 
                   type="submit" 
-                  className="bg-submit text-white px-6 py-3 md:px-8 md:py-4 font-medium uppercase tracking-wider flex items-center justify-center rounded-lg transition-all duration-300 hover:bg-secondary hover:shadow-lg transform hover:-translate-y-1"
+                  disabled={isSubmitting}
+                  className={`bg-submit text-white px-6 py-3 md:px-8 md:py-4 font-medium uppercase tracking-wider flex items-center justify-center rounded-lg transition-all duration-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary hover:shadow-lg transform hover:-translate-y-1'}`}
                   style={{ 
                     boxShadow: '0 4px 14px rgba(254, 192, 122, 0.3)',
                     background: 'linear-gradient(135deg,rgb(111, 39, 65) 0%, #570120 100%)'
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.background = `linear-gradient(135deg,rgb(149, 67, 97) 0%,rgb(111, 56, 76) 100%)`}
-                  onMouseOut={(e) => e.currentTarget.style.background = `linear-gradient(135deg,rgb(161, 86, 113) 0%,rgb(89, 5, 36) 100%)`}
                 >
-                  Send Message <FaArrowRight className="ml-2" />
+                  {isSubmitting ? 'Sending...' : 'Send Message'} <FaArrowRight className="ml-2" />
                 </button>
               </div>
             </form>
