@@ -16,6 +16,7 @@ export default function ProductCard({ product }) {
             alt={product.name}
             width={200}
             height={200}
+            priority={false}
             className="mx-auto transition-transform duration-500 group-hover:scale-110"
           />
           <h3 className="text-2xl font-semibold text-text mt-4">{product.name}</h3>

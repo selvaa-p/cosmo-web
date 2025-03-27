@@ -66,6 +66,7 @@ export default function Header({ alwaysSolid = false }) {
                   alt="CosmoHentorq Logo"
                   width={55}
                   height={55}
+                  priority={false}
                   className="object-contain rounded-full transition-transform duration-300 group-hover:scale-105"
                 />
               </div>

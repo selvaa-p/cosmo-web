@@ -28,7 +28,7 @@ export default function Hero() {
       className="h-screen flex flex-col items-center justify-center text-center p-6 pt-20"
       style={{ background: "linear-gradient(135deg, #F4E6D6, #F1B474)",  backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-      <Image src="/assets/logo.png" alt="Company Logo" width={300} height={300} priority />
+      <Image src="/assets/logo.png" alt="Company Logo" width={300} height={300} priority={false}/>
       <br></br>
       <br></br>
       <button>

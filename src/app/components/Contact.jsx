@@ -48,7 +48,7 @@ export default function Contact() {
 
     try {
       // Use your actual API route
-      const response = await fetch('https://backend-api-urzp.onrender.com/api/submit-contact', {
+      const response = await fetch('/api/submit-contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

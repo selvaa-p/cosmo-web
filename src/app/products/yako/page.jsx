@@ -30,6 +30,7 @@ export default function YakoPage() {
               alt="Y.A.K.O" 
               width={500} 
               height={500} 
+              priority={false}
               className="relative z-10 mx-auto transform transition-all duration-500 hover:scale-105"
             />
           </div>

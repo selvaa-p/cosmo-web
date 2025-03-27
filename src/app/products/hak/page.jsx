@@ -32,6 +32,7 @@ export default function HAKPage() {
               alt="H.A.K Cloud Service" 
               width={500} 
               height={500} 
+              priority={false}
               className="rounded-lg shadow-lg"
             />
           </div>

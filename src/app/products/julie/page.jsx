@@ -76,6 +76,7 @@ export default function JuliePage() {
             alt="J.U.L.I.E AI" 
             width={400} 
             height={400} 
+            priority={false}
             className="rounded-lg shadow-lg"
           />
         </motion.div>
@@ -337,6 +338,7 @@ export default function JuliePage() {
                     alt="J.U.L.I.E Human Tracker Interface" 
                     width={400} 
                     height={300} 
+                    priority={false}
                     className="w-full object-cover transition-all duration-300 hover:brightness-110"
                   />
                 </motion.div>
@@ -351,6 +353,7 @@ export default function JuliePage() {
                     alt="J.U.L.I.E Human Tracker in Action" 
                     width={400} 
                     height={300}
+                    priority={false}
                     className="w-full object-cover transition-all duration-300 hover:brightness-110"
                     unoptimized
                   />
