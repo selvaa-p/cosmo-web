@@ -6,6 +6,12 @@ import Link from 'next/link';
 import { FaBars, FaTimes, FaArrowRight } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 
+const handleLogoClick = (e) => {
+  e.preventDefault();
+  window.location.href = '/';
+  window.location.reload('/');
+}; 
+
 export default function Header({ alwaysSolid = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -58,7 +64,7 @@ export default function Header({ alwaysSolid = false }) {
       <div className="container mx-auto px-4 flex justify-between items-center h-full">
         {/* Logo Section with Enhanced Styling */}
         <div className="flex items-center">
-          <Link href="/">
+          <Link href="/" onClick={handleLogoClick}>
             <div className="flex items-center group">
               <div className="relative overflow-hidden rounded-full bg-gradient-to-r from-blue-50 to-white p-1 shadow-md transition-all duration-300 group-hover:shadow-lg">
                 <Image
