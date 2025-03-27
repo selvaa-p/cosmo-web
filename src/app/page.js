@@ -64,25 +64,25 @@ export default function Home() {
   return (
     <main className="overflow-x-hidden">
       <Header />
-      <div id="home" ref={heroRef} className={`transition-opacity duration-1000 ${heroVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div id="home" ref={heroRef} className={`transition-opacity duration-500 ${heroVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Hero />
       </div>
-      <div id="about" ref={visionRef} className={`transition-opacity duration-1000 ${visionVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div id="about" ref={visionRef} className={`transition-opacity duration-500 ${visionVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Vision />
       </div>
-      <div id="expertise" ref={expertiseRef} className={`transition-opacity duration-1000 ${expertiseVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div id="expertise" ref={expertiseRef} className={`transition-opacity duration-500 ${expertiseVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Expertise />
       </div>
-      <div id="products" ref={productsRef} className={`transition-opacity duration-1000 ${productsVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div id="products" ref={productsRef} className={`transition-opacity duration-500 ${productsVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Products />
       </div>
-      <div id="team" ref={teamRef} className={`transition-opacity duration-1000 ${teamVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div id="team" ref={teamRef} className={`transition-opacity duration-500 ${teamVisible ? 'opacity-100' : 'opacity-0'}`}>
         <TeamSection />
       </div>
-      <div id="faq" ref={faqsRef} className={`transition-opacity duration-1000 ${faqVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div id="faq" ref={faqsRef} className={`transition-opacity duration-500 ${faqVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Faq />
       </div>
-      <div id="contact" ref={contactRef} className={`transition-opacity duration-1000 ${contactVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div id="contact" ref={contactRef} className={`transition-opacity duration-500 ${contactVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Contact />
       </div>
       <div id="footer"> {/*ref={footerRef} className={`transition-opacity duration-1000 ${footerVisible ? 'opacity-100' : 'opacity-0'}`} */}
