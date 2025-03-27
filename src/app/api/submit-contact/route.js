@@ -1,4 +1,4 @@
-// src\app\api\submit-contact.js
+// src\app\api\submit-contact\route.js
 import { Resend } from 'resend';
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
@@ -6,19 +6,21 @@ import { NextResponse } from 'next/server';
 export async function POST(req) {
   // CORS handling
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_SITE_URL || '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 
   try {
-    // Parse request body
+    // Log the entire request body for debugging
     const body = await req.json();
+    console.log('Received form submission:', body);
 
     // Input validation
     const { name, email, subject, message } = body;
   
     if (!name || !email || !subject || !message) {
+      console.error('Validation failed: Missing fields');
       return NextResponse.json({ 
         success: false, 
         message: 'All fields are required' 
@@ -28,8 +30,17 @@ export async function POST(req) {
       });
     }
 
-    // Initialize Resend
-    // const resend = new Resend(process.env.RESEND_API_KEY);
+    // Check if required environment variables are present
+    if (!process.env.RESEND_API_KEY) {
+      console.error('Missing RESEND_API_KEY');
+      return NextResponse.json({
+        success: false,
+        message: 'Server configuration error'
+      }, {
+        status: 500,
+        headers: corsHeaders
+      });
+    }
 
     // Decode and parse the private key
     const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY
@@ -47,48 +58,6 @@ export async function POST(req) {
 
     const sheets = google.sheets({ version: 'v4', auth: client });
     const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
-
-    // Check existing sheets
-    const spreadsheet = await sheets.spreadsheets.get({
-      spreadsheetId: spreadsheetId
-    });
-
-    // Find or create Submissions sheet
-    let submissionsSheetId = spreadsheet.data.sheets.find(
-      sheet => sheet.properties.title === 'Submissions'
-    )?.properties.sheetId;
-
-    // If sheet doesn't exist, create it
-    if (!submissionsSheetId) {
-      const addSheetResponse = await sheets.spreadsheets.batchUpdate({
-        spreadsheetId: spreadsheetId,
-        resource: {
-          requests: [{
-            addSheet: {
-              properties: {
-                title: 'Submissions',
-                gridProperties: {
-                  rowCount: 1000,
-                  columnCount: 5
-                }
-              }
-            }
-          }]
-        }
-      });
-
-      submissionsSheetId = addSheetResponse.data.replies[0].addSheet.properties.sheetId;
-
-      // Add headers to the new sheet
-      await sheets.spreadsheets.values.update({
-        spreadsheetId: spreadsheetId,
-        range: 'Submissions!A1:E1',
-        valueInputOption: 'RAW',
-        resource: {
-          values: [['Timestamp', 'Name', 'Email', 'Subject', 'Message']]
-        }
-      });
-    }
 
     // Submit to Google Sheets
     const response = await sheets.spreadsheets.values.append({
@@ -108,20 +77,22 @@ export async function POST(req) {
     });
 
     // Send notification email
-
     const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-    from: 'ClientResponse <onboarding@resend.dev>',
-    to: ['sit22it123@sairamtap.edu.in'],
-    subject: `New Contact Form: ${subject}`,
-    html: `<h1>New Contact Form Submission</h1>
-    <p><strong>Name:</strong> ${name}</p>
-    <p><strong>Email:</strong> ${email}</p>
-    <p><strong>Subject:</strong> ${subject}</p>
-    <p><strong>Message:</strong></p>
-    <p>${message}</p>
-    `
+    const emailResponse = await resend.emails.send({
+      from: 'ClientResponse <onboarding@resend.dev>',
+      to: ['sit22it123@sairamtap.edu.in'],
+      subject: `New Contact Form: ${subject}`,
+      html: `<h1>New Contact Form Submission</h1>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Subject:</strong> ${subject}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message}</p>
+      `
     });
+
+    console.log('Sheets response:', response.data);
+    console.log('Email response:', emailResponse);
 
     return NextResponse.json({ 
       success: true, 
@@ -136,6 +107,15 @@ export async function POST(req) {
     });
   } catch (error) {
     console.error('Full Submission Error:', error);
+    
+    // More detailed error logging
+    console.error('Error Details:', {
+      message: error.message,
+      name: error.name,
+      code: error.code,
+      stack: error.stack
+    });
+
     return NextResponse.json({ 
       success: false, 
       message: 'Submission failed',
@@ -143,7 +123,6 @@ export async function POST(req) {
       errorDetails: {
         name: error.name,
         code: error.code,
-        library: error.library,
         reason: error.reason,
         stack: error.stack
       }
@@ -159,7 +138,7 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_SITE_URL || '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     }
