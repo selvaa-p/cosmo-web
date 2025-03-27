@@ -124,8 +124,8 @@ export default function Vision() {
               key={concept.id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.5, delay: concepts.indexOf(concept) * 0.2 }}
-              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0, delay: 0 }}
+              whileHover={{ scale: 1.10 }}
               className={`bg-white rounded-xl shadow-lg p-8 cursor-pointer transition-all duration-300 ${
                 activeConcept === concept.id ? 'ring-4 ring-custom-red' : ''
               }`}
