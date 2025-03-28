@@ -96,7 +96,8 @@ export default function SponsorSection() {
                   height={100}
                   // Conditionally apply scale for Apple logo
                   className={`object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 w-full h-auto 
-                    ${sponsor.name === 'Apple' ? 'scale-50' : ''}`}
+                    ${sponsor.name === 'Apple' ? 'scale-50' : ''}
+                    `}
                 />
               </div>
             ))}
@@ -117,7 +118,9 @@ export default function SponsorSection() {
                       width={120}
                       height={80}
                       className={`object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 max-w-full max-h-full"
-                        ${sponsor.name === 'Apple' ? 'scale-50' : ''}`}
+                        ${sponsor.name === 'Apple' ? 'scale-50' : ''}
+                        ${sponsor.name === 'Tesla' ? 'scale-50' : ''}
+                        `}
                     />
                   </div>
                 ))}
