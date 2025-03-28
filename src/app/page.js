@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Contact from "./components/Contact";
 import TeamSection from "./components/TeamSection";
 import Faq from "./components/Faq";
+import SponsorSection from './components/Sponsor';
 
 const observerOptions = {
   root: null,
@@ -51,6 +52,7 @@ export default function Home() {
   const contactRef = useRef(null);
   const footerRef = useRef(null);
   const faqsRef = useRef(null);
+  const sponsorRef = useRef(null);
 
   const heroVisible = useOnScreen(heroRef);
   const visionVisible = useOnScreen(visionRef);
@@ -60,6 +62,7 @@ export default function Home() {
   const contactVisible = useOnScreen(contactRef);
   const footerVisible = useOnScreen(footerRef);
   const faqVisible = useOnScreen(faqsRef);
+  const SponsorVisible = useOnScreen(sponsorRef);
 
   return (
     <main className="overflow-x-hidden">
@@ -72,6 +75,9 @@ export default function Home() {
       </div>
       <div id="expertise" ref={expertiseRef} className={`transition-opacity duration-500 ${expertiseVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Expertise />
+      </div>
+      <div id="sponsors" ref={sponsorRef} className={`transition-opacity duration-500 ${SponsorVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <SponsorSection />
       </div>
       <div id="products" ref={productsRef} className={`transition-opacity duration-500 ${productsVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Products />

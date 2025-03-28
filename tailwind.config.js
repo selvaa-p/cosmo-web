@@ -33,6 +33,12 @@ export default {
       },
       animation: {
         'spin-slow': 'spin 30s linear infinite',
+        'marquee': 'marquee 25s linear infinite',
+        'marquee2': 'marquee2 25s linear infinite',
+        'fade-in-down': 'fade-in-down 0.7s ease-out',
+        'fade-in-up': 'fade-in-up 0.7s ease-out',
+        'fade-in': 'fade-in 0.7s ease-out',
+        'scale-in': 'scale-in 0.7s ease-out',
       },
       transitionProperty: {
         'opacity': 'opacity',
@@ -56,14 +62,16 @@ export default {
         'scale-in': {
           '0%': { transform: 'scale(0.9)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
-        }
+        },
+        'marquee': {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        'marquee2': {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
       },
-      animation: {
-        'fade-in-down': 'fade-in-down 0.7s ease-out',
-        'fade-in-up': 'fade-in-up 0.7s ease-out',
-        'fade-in': 'fade-in 0.7s ease-out',
-        'scale-in': 'scale-in 0.7s ease-out'
-      }
     },
   },
   plugins: [],
