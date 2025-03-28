@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export', // Enables static site export
-    images: {
-      unoptimized: true, // Optional: Helps with static export if using next/image
-    },
-  };
-  
-  export default nextConfig;
-  
+  reactStrictMode: true, // Helps with debugging and better React performance
+    experimental: {
+    serverActions: true, // If using Next.js server actions
+  },
+};
+
+export default nextConfig;
