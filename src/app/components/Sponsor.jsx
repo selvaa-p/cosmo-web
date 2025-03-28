@@ -16,7 +16,8 @@ const sponsors = [
   {
     name: "Apple",
     logo: "/assets/sponsors/apple.svg",
-    url: "https://www.apple.com"
+    url: "https://www.apple.com",
+    scale: 0.5
   },
   {
     name: "Amazon",
@@ -76,40 +77,51 @@ export default function SponsorSection() {
             </p>
           </div>
           
-          <div className="relative w-full inline-flex flex-nowrap overflow-hidden">
-            <div className="animate-marquee whitespace-nowrap flex items-center justify-center space-x-12 md:space-x-16">
-              {sponsors.map((sponsor, index) => (
-                <div 
-                  key={`${sponsor.name}-${index}`} 
-                  className="inline-block mx-4"
-                >
-                  <Image 
-                    src={sponsor.logo}
-                    alt={`${sponsor.name} logo`}
-                    width={400}
-                    height={400}
-                    className="object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
-                  />
-                </div>
-              ))}
-            </div>
-            
-            {/* Duplicate the marquee for seamless infinite scroll */}
-            <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center justify-center space-x-12 md:space-x-16">
-              {sponsors.map((sponsor, index) => (
-                <div 
-                  key={`${sponsor.name}-duplicate-${index}`} 
-                  className="inline-block mx-4"
-                >
-                  <Image 
-                    src={sponsor.logo}
-                    alt={`${sponsor.name} logo`}
-                    width={400}
-                    height={400}
-                    className="object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
-                  />
-                </div>
-              ))}
+          {/* Mobile View Grid Layout */}
+          <div className="md:hidden grid grid-cols-3 gap-6 place-items-center">
+            {sponsors.map((sponsor, index) => (
+              <div 
+                key={`${sponsor.name}-mobile-${index}`} 
+                // Add conditional className for last row centering
+                className={`w-full max-w-[100px] 
+                  ${index >= sponsors.length - (sponsors.length % 3) 
+                    ? 'col-start-2' // Center the last row if not fully filled
+                    : ''}`
+                }
+              >
+                <Image 
+                  src={sponsor.logo}
+                  alt={`${sponsor.name} logo`}
+                  width={100}
+                  height={100}
+                  // Conditionally apply scale for Apple logo
+                  className={`object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 w-full h-auto 
+                    ${sponsor.name === 'Apple' ? 'scale-50' : ''}`}
+                />
+              </div>
+            ))}
+          </div>
+          
+          {/* Desktop View - Seamless Marquee */}
+          <div className="hidden md:block relative w-full overflow-hidden">
+            <div className="sponsor-track inline-flex items-center">
+              <div className="flex animate-marquee space-x-12">
+                {[...sponsors, ...sponsors].map((sponsor, index) => (
+                  <div 
+                    key={`${sponsor.name}-scroll-${index}`} 
+                    className="flex items-center justify-center w-[150px] h-[100px]"
+                  >
+                    <Image 
+                      src={sponsor.logo}
+                      alt={`${sponsor.name} logo`}
+                      width={120}
+                      height={80}
+                      className={`object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 max-w-full max-h-full"
+                        ${sponsor.name === 'Apple' ? 'scale-50' : ''}`}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

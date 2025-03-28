@@ -128,8 +128,8 @@ export async function POST(req) {
       `
     });
 
-    console.log('Sheets response:', response.data);
-    console.log('Email response:', emailResponse);
+    // console.log('Sheets response:', response.data);
+    // console.log('Email response:', emailResponse);
 
     return NextResponse.json({ 
       success: true, 
