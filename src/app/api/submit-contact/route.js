@@ -2,6 +2,7 @@
 import { Resend } from 'resend';
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
+import axios from 'axios';
 
 export async function POST(req) {
   // CORS handling
@@ -16,14 +17,48 @@ export async function POST(req) {
     const body = await req.json();
     console.log('Received form submission:', body);
 
-    // Input validation
-    const { name, email, subject, message } = body;
+    // Destructure with captcha token
+    const { name, email, subject, message, captchaToken } = body;
   
+    // Input validation
     if (!name || !email || !subject || !message) {
       console.error('Validation failed: Missing fields');
       return NextResponse.json({ 
         success: false, 
         message: 'All fields are required' 
+      }, { 
+        status: 400,
+        headers: corsHeaders
+      });
+    }
+
+    // Captcha verification
+    if (!captchaToken) {
+      console.error('Captcha token missing');
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Captcha verification failed' 
+      }, { 
+        status: 400,
+        headers: corsHeaders
+      });
+    }
+
+    // Verify reCAPTCHA
+    const captchaVerificationUrl = 'https://www.google.com/recaptcha/api/siteverify';
+    const captchaResponse = await axios.post(captchaVerificationUrl, null, {
+      params: {
+        secret: process.env.RECAPTCHA_SECRET_KEY,
+        response: captchaToken
+      }
+    });
+
+    // Check captcha verification result
+    if (!captchaResponse.data.success) {
+      console.error('Captcha verification failed', captchaResponse.data);
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Captcha verification failed' 
       }, { 
         status: 400,
         headers: corsHeaders
@@ -62,7 +97,7 @@ export async function POST(req) {
     // Submit to Google Sheets
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId: spreadsheetId,
-      range: 'Submissions!A:E',
+      range: 'Submissions!A:F',
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       resource: {
@@ -71,7 +106,8 @@ export async function POST(req) {
           name,
           email,
           subject,
-          message
+          message,
+          'Captcha Verified' // Additional column to track captcha verification
         ]]
       }
     });
@@ -88,6 +124,7 @@ export async function POST(req) {
       <p><strong>Subject:</strong> ${subject}</p>
       <p><strong>Message:</strong></p>
       <p>${message}</p>
+      <p><strong>Captcha:</strong> Verified</p>
       `
     });
 

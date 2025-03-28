@@ -1,6 +1,7 @@
 // src\app\components\Contact.jsx
 "use client";
 import React, { useEffect, useState } from 'react';
+import ReCAPTCHA from "react-google-recaptcha";
 import 'tailwindcss/tailwind.css';
 import { FaArrowRight, FaEnvelope, FaMapMarkerAlt, FaPhoneAlt} from 'react-icons/fa';
 export default function Contact() {
@@ -33,6 +34,10 @@ export default function Contact() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // New state for captcha
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const [captchaError, setCaptchaError] = useState(false);
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData(prevState => ({
@@ -41,32 +46,50 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
+// Captcha handler
+const handleCaptchaChange = (token) => {
+  setCaptchaToken(token);
+  setCaptchaError(false);
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Validate captcha first
+  if (!captchaToken) {
+    setCaptchaError(true);
+    return;
+  }
+
+  setIsSubmitting(true);
+  setSubmitStatus(null);
+
 
     try {
-      // Use your actual API route
+      // Use your actual API routesss
       const response = await fetch('/api/submit-contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          captchaToken // Send the captcha token to your backend
+        })
       });
 
       const result = await response.json();
 
       if (result.success) {
         setSubmitStatus('success');
-        // Reset form
+        // Reset form and captcha
         setFormData({
           name: '',
           email: '',
           subject: '',
           message: ''
         });
+        setCaptchaToken(null);
       } else {
         setSubmitStatus('error');
       }
@@ -214,6 +237,20 @@ export default function Contact() {
                     required
                   ></textarea>
                 </div>
+                {/* Captcha Section */}
+                <div className="flex justify-center">
+                  <ReCAPTCHA
+                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                    onChange={handleCaptchaChange}
+                    theme="light"
+                  />
+                </div>
+                
+                {captchaError && (
+                  <div className="text-red-500 text-sm text-center">
+                    Please complete the captcha
+                  </div>
+                )}
               </div>
               <div className="mt-4">
                 <button 
