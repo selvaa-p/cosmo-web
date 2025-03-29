@@ -11,6 +11,7 @@ import Contact from "./components/Contact";
 import TeamSection from "./components/TeamSection";
 import Faq from "./components/Faq";
 import SponsorSection from './components/Sponsor';
+import Blog from './components/Blogs';
 
 const observerOptions = {
   root: null,
@@ -53,6 +54,7 @@ export default function Home() {
   const footerRef = useRef(null);
   const faqsRef = useRef(null);
   const sponsorRef = useRef(null);
+  const blogRef = useRef(null);
 
   const heroVisible = useOnScreen(heroRef);
   const visionVisible = useOnScreen(visionRef);
@@ -63,11 +65,11 @@ export default function Home() {
   const footerVisible = useOnScreen(footerRef);
   const faqVisible = useOnScreen(faqsRef);
   const SponsorVisible = useOnScreen(sponsorRef);
-
+  const blogVisible = useOnScreen(blogRef);
   return (
     <main className="overflow-x-hidden">
       <Header />
-      <div id="home" ref={heroRef} className={`transition-opacity duration-500 ${heroVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div id="home" ref={heroRef} className={`transition-opacity duration-400 ${heroVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Hero />
       </div>
       <div id="about" ref={visionRef} className={`transition-opacity duration-500 ${visionVisible ? 'opacity-100' : 'opacity-0'}`}>
@@ -84,6 +86,9 @@ export default function Home() {
       </div>
       <div id="team" ref={teamRef} className={`transition-opacity duration-500 ${teamVisible ? 'opacity-100' : 'opacity-0'}`}>
         <TeamSection />
+      </div>
+      <div id="blog" ref={blogRef} className={`transition-opacity duration-500 ${blogVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <Blog />
       </div>
       <div id="faq" ref={faqsRef} className={`transition-opacity duration-500 ${faqVisible ? 'opacity-100' : 'opacity-0'}`}>
         <Faq />

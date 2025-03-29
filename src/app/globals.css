@@ -27,6 +27,7 @@
   --instagram: #E1306C;       /* Instagram color */
   --linkedin: #0077B5;        /* LinkedIn color */
   --youtube: #FF0000;         /* YouTube color */
+  
 }
 
 /* In global CSS */
@@ -128,48 +129,6 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   margin: 0 auto;
 }
-
-/* .faq-item {
-  border-radius: 10px;
-  box-shadow: 6px 6px 12px #bec3c9, -6px -6px 12px #ffffff;
-  transition: all 0.3s ease;
-} */
-
-/* .faq-question {
-  padding: 15px 20px;
-  font-weight: 500;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  background-color: var(--manjal-lite);
-  color: var(--text);
-}
-
-.faq-question:hover,
-.faq-question.active {
-  box-shadow: inset 6px 6px 12px #bec3c9, inset -6px -6px 12px var(--manjal-lite);
-}
-
-.faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, padding 0.5s ease;
-  border-radius: 0 0 10px 10px;
-  background-color: var(--manjal-lite);
-  color: var(--text);
-}
-
-.faq-answer p {
-  margin: 0;
-  font-weight: 300;
-  line-height: 1.6;
-  transition: all 0.3s ease;
-}
-
-.faq-answer.active {
-  max-height: 1000px;
-  padding: 15px 20px;
-  box-shadow: inset 6px 6px 12px #bec3c9, inset -6px -6px 12px var(--manjal-lite);
-} */
 
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-10px); }
