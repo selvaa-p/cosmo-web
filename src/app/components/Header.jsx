@@ -1,9 +1,9 @@
 // src\app\components\Header.jsx
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaBars, FaTimes, FaArrowRight } from 'react-icons/fa';
+import { FaBars, FaTimes, FaArrowRight, FaChevronDown } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 
 const handleLogoClick = (e) => {
@@ -15,8 +15,10 @@ const handleLogoClick = (e) => {
 export default function Header({ alwaysSolid = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +29,17 @@ export default function Header({ alwaysSolid = false }) {
       return () => window.removeEventListener("scroll", handleScroll);
     }
   }, [alwaysSolid]);
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSmoothScroll = (e, targetId) => {
     e.preventDefault();
@@ -47,7 +60,16 @@ export default function Header({ alwaysSolid = false }) {
 
   const navLinks = [
     { href: "#home", label: "Home" },
-    { href: "#about", label: "About" },
+    { 
+      href: "#about", 
+      label: "About", 
+      hasDropdown: true,
+      dropdownItems: [
+        { href: "#about", label: "Company" },
+        { href: "#blog", label: "Blogs" },
+        { href: "/careers", label: "Careers" }
+      ] 
+    },
     { href: "#products", label: "Products" },
     { href: "#team", label: "Team" },
     { href: "#contact", label: "Contact" },
@@ -57,7 +79,7 @@ export default function Header({ alwaysSolid = false }) {
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         alwaysSolid || scrolled 
-          ? "bg-white backdrop-blur-sm bg-opacity-95 shadow-lg h-16 md:h-20" 
+          ? "bg-white/85 backdrop-blur-md shadow-lg h-16 md:h-20" 
           : "bg-transparent h-20 md:h-24 py-2 md:py-6"
       }`}
     >
@@ -66,44 +88,73 @@ export default function Header({ alwaysSolid = false }) {
         <div className="flex items-center">
           <Link href="/" onClick={handleLogoClick}>
             <div className="flex items-center group">
-              <div className="relative overflow-hidden rounded-full bg-gradient-to-r from-blue-50 to-white p-1 shadow-md transition-all duration-300 group-hover:shadow-lg">
+              <div className="relative overflow-hidden rounded-full bg-gradient-to-r from-blue-100 to-white p-1.5 shadow-md transition-all duration-300 group-hover:shadow-lg">
                 <Image
                   src="/assets/logo_only.png"
                   alt="CosmoHentorq Logo"
-                  width={55}
-                  height={55}
+                  width={50}
+                  height={50}
                   priority={false}
                   className="object-contain rounded-full transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
-              <h1 className="text-2xl font-bold ml-4 text-text md:block hidden bg-gradient-to-r from-text to-primary bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold ml-3 text-text md:block hidden bg-gradient-to-r from-text to-primary bg-clip-text text-transparent">
                 COSMOHENTORQ <span className="font-light">INNOVATIONS</span>
               </h1>
             </div>
           </Link>
         </div>
-        
-        {/* Desktop Navigation with Glass Morphism */}
-        <nav className="hidden md:flex items-center bg-white bg-opacity-30 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm">
+       
+        {/* Desktop Navigation with Improved Glass Morphism */}
+        <nav className="hidden md:flex items-center bg-white bg-opacity-30 backdrop-blur-sm rounded-2xl px-4 py-2 shadow-sm">
           {navLinks.map((link, index) => (
-            <a
-              key={link.label}
-              href={isHomePage ? link.href : `/${link.href}`}
-              onClick={(e) => handleSmoothScroll(e, link.href.substring(1))}
-              className={`text-text text-base font-medium px-4 py-2 rounded-full border border-transparent 
-                hover:border-highlight hover:bg-highlight transition-colors relative mx-1
-                ${index === navLinks.length - 1 ? 'bg-primary text-white hover:bg-primary hover:text-white hover:shadow-md' : ''}
-              `}
+            <div 
+              key={link.label} 
+              className="relative"
+              ref={link.hasDropdown ? dropdownRef : null}
             >
-              {link.label}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-primary transition-all duration-300 group-hover:w-full"></div>
-            </a>
+              <a
+                href={link.hasDropdown ? "#" : (isHomePage ? link.href : `/${link.href}`)}
+                onClick={(e) => {
+                  if (link.hasDropdown) {
+                    e.preventDefault();
+                    setDropdownOpen(!dropdownOpen);
+                  } else {
+                    handleSmoothScroll(e, link.href.substring(1));
+                  }
+                }}
+                className={`text-text text-base font-medium px-4 py-2 rounded-xl border border-transparent 
+                  hover:border-highlight hover:bg-highlight transition-all relative mx-1 flex items-center
+                  ${link.hasDropdown && dropdownOpen ? 'bg-highlight/20 border-highlight/20' : ''}
+                  ${index === navLinks.length - 1 ? 'bg-primary text-white hover:bg-primary/90 hover:text-white hover:shadow-md' : ''}
+                `}
+              >
+                {link.label}
+                {link.hasDropdown && <FaChevronDown className={`ml-2 text-xs transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />}
+              </a>
+              
+              {/* Dropdown Menu */}
+              {link.hasDropdown && dropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-48 rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-gray-100 overflow-hidden z-50 transition-all duration-300">
+                  {link.dropdownItems.map((item) => (
+                    <Link 
+                      key={item.label} 
+                      href={item.href}
+                      className="block px-4 py-3 text-text hover:bg-highlight/10 transition-colors border-b border-gray-100 last:border-0 flex items-center"
+                    >
+                      <span>{item.label}</span>
+                      <FaArrowRight className="ml-auto text-xs opacity-50" />
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </nav>
         
         {/* Mobile Menu Button with Enhanced Styling */}
         <button
-          className="md:hidden text-text p-2 rounded-full bg-white bg-opacity-90 shadow-md hover:shadow-lg transition-all duration-300"
+          className="md:hidden text-text p-2.5 rounded-xl bg-white/80 backdrop-blur-md shadow-md hover:shadow-lg transition-all duration-300 border border-white/40"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -113,21 +164,49 @@ export default function Header({ alwaysSolid = false }) {
       
       {/* Mobile Navigation with Enhanced Styling */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white bg-opacity-95 backdrop-blur-md w-full absolute top-full left-0 py-4 shadow-lg rounded-b-2xl border-t border-gray-100">
+        <div className="md:hidden bg-white/95 backdrop-blur-md w-full absolute top-full left-0 py-4 shadow-lg rounded-2xl border-t border-gray-100 mt-1 mx-2 max-w-[calc(100%-1rem)]">
           <nav className="flex flex-col space-y-2 px-4">
             {navLinks.map((link, index) => (
-              <a
-                key={link.label}
-                href={isHomePage ? link.href : `/${link.href}`}
-                onClick={(e) => handleSmoothScroll(e, link.href.substring(1))}
-                className={`text-text text-lg font-medium px-4 py-3 rounded-xl border border-transparent 
-                  hover:border-highlight hover:bg-highlight transition-colors flex items-center justify-between
-                  ${index === navLinks.length - 1 ? 'bg-primary text-white hover:bg-primary hover:shadow-md' : 'bg-gray-50'}
-                `}
-              >
-                {link.label}
-                <FaArrowRight className="text-sm opacity-70" />
-              </a>
+              <div key={link.label}>
+                <a
+                  href={!link.hasDropdown ? (isHomePage ? link.href : `/${link.href}`) : "#"}
+                  onClick={(e) => {
+                    if (link.hasDropdown) {
+                      e.preventDefault();
+                      setDropdownOpen(!dropdownOpen && index === 1); // Only toggle for About section
+                    } else {
+                      handleSmoothScroll(e, link.href.substring(1));
+                    }
+                  }}
+                  className={`text-text text-lg font-medium px-4 py-3 rounded-xl border border-transparent 
+                    hover:border-highlight/20 hover:bg-highlight/10 transition-colors flex items-center justify-between
+                    ${index === navLinks.length - 1 ? 'bg-primary text-white hover:bg-primary/90 hover:shadow-md' : 'bg-gray-50/80'}
+                  `}
+                >
+                  {link.label}
+                  {link.hasDropdown ? (
+                    <FaChevronDown className={`text-sm opacity-70 transition-transform ${dropdownOpen && index === 1 ? 'rotate-180' : ''}`} />
+                  ) : (
+                    <FaArrowRight className="text-sm opacity-70" />
+                  )}
+                </a>
+                
+                {/* Mobile Dropdown */}
+                {link.hasDropdown && dropdownOpen && index === 1 && (
+                  <div className="pl-4 mt-1 space-y-1 border-l-2 border-primary/20 ml-4">
+                    {link.dropdownItems.map((item) => (
+                      <Link 
+                        key={item.label} 
+                        href={item.href}
+                        className="block px-4 py-2.5 text-text text-base bg-gray-50/50 hover:bg-highlight/10 transition-colors rounded-lg flex items-center justify-between"
+                      >
+                        <span>{item.label}</span>
+                        <FaArrowRight className="text-xs opacity-50" />
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
         </div>
@@ -135,3 +214,144 @@ export default function Header({ alwaysSolid = false }) {
     </header>
   );
 }
+
+
+
+// TIME:2025-03-31 12:43 PM
+// "use client";
+// import React, { useState, useEffect } from 'react';
+// import Image from 'next/image';
+// import Link from 'next/link';
+// import { FaBars, FaTimes, FaArrowRight } from 'react-icons/fa';
+// import { usePathname } from 'next/navigation';
+
+// const handleLogoClick = (e) => {
+//   e.preventDefault();
+//   window.location.href = '/';
+//   window.location.reload('/');
+// }; 
+
+// export default function Header({ alwaysSolid = false }) {
+//   const [scrolled, setScrolled] = useState(false);
+//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+//   const pathname = usePathname();
+//   const isHomePage = pathname === '/';
+
+//   useEffect(() => {
+//     const handleScroll = () => {
+//       setScrolled(window.scrollY > window.innerHeight - 100);
+//     };
+//     if (!alwaysSolid) {
+//       window.addEventListener("scroll", handleScroll);
+//       return () => window.removeEventListener("scroll", handleScroll);
+//     }
+//   }, [alwaysSolid]);
+
+//   const handleSmoothScroll = (e, targetId) => {
+//     e.preventDefault();
+    
+//     // If we're not on the homepage, navigate to homepage first
+//     if (!isHomePage) {
+//       window.location.href = `/#${targetId}`;
+//       return;
+//     }
+    
+//     // If we're on homepage, just scroll to the section
+//     const target = document.getElementById(targetId);
+//     if (target) {
+//       target.scrollIntoView({ behavior: "smooth", block: "start" });
+//     }
+//     setMobileMenuOpen(false);
+//   };
+
+//   const navLinks = [
+//     { href: "#home", label: "Home" },
+//     { href: "#about", label: "About" },
+//     { href: "#products", label: "Products" },
+//     { href: "#team", label: "Team" },
+//     { href: "#contact", label: "Contact" },
+//   ];
+
+//   return (
+//     <header
+//       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+//         alwaysSolid || scrolled 
+//           ? "bg-white backdrop-blur-sm bg-opacity-95 shadow-lg h-16 md:h-20" 
+//           : "bg-transparent h-20 md:h-24 py-2 md:py-6"
+//       }`}
+//     >
+//       <div className="container mx-auto px-4 flex justify-between items-center h-full">
+//         {/* Logo Section with Enhanced Styling */}
+//         <div className="flex items-center">
+//           <Link href="/" onClick={handleLogoClick}>
+//             <div className="flex items-center group">
+//               <div className="relative overflow-hidden rounded-full bg-gradient-to-r from-blue-50 to-white p-1 shadow-md transition-all duration-300 group-hover:shadow-lg">
+//                 <Image
+//                   src="/assets/logo_only.png"
+//                   alt="CosmoHentorq Logo"
+//                   width={55}
+//                   height={55}
+//                   priority={false}
+//                   className="object-contain rounded-full transition-transform duration-300 group-hover:scale-105"
+//                 />
+//               </div>
+//               <h1 className="text-2xl font-bold ml-4 text-text md:block hidden bg-gradient-to-r from-text to-primary bg-clip-text text-transparent">
+//                 COSMOHENTORQ <span className="font-light">INNOVATIONS</span>
+//               </h1>
+//             </div>
+//           </Link>
+//         </div>
+        
+//         {/* Desktop Navigation with Glass Morphism */}
+//         <nav className="hidden md:flex items-center bg-white bg-opacity-30 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm">
+//           {navLinks.map((link, index) => (
+//             <a
+//               key={link.label}
+//               href={isHomePage ? link.href : `/${link.href}`}
+//               onClick={(e) => handleSmoothScroll(e, link.href.substring(1))}
+//               className={`text-text text-base font-medium px-4 py-2 rounded-full border border-transparent 
+//                 hover:border-highlight hover:bg-highlight transition-colors relative mx-1
+//                 ${index === navLinks.length - 1 ? 'bg-primary text-white hover:bg-primary hover:text-white hover:shadow-md' : ''}
+//               `}
+//             >
+//               {link.label}
+//               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-primary transition-all duration-300 group-hover:w-full"></div>
+//             </a>
+//           ))}
+//         </nav>
+        
+//         {/* Mobile Menu Button with Enhanced Styling */}
+//         <button
+//           className="md:hidden text-text p-2 rounded-full bg-white bg-opacity-90 shadow-md hover:shadow-lg transition-all duration-300"
+//           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+//           aria-label="Toggle menu"
+//         >
+//           {mobileMenuOpen ? <FaTimes className="text-primary" /> : <FaBars className="text-primary" />}
+//         </button>
+//       </div>
+      
+//       {/* Mobile Navigation with Enhanced Styling */}
+//       {mobileMenuOpen && (
+//         <div className="md:hidden bg-white bg-opacity-95 backdrop-blur-md w-full absolute top-full left-0 py-4 shadow-lg rounded-b-2xl border-t border-gray-100">
+//           <nav className="flex flex-col space-y-2 px-4">
+//             {navLinks.map((link, index) => (
+//               <a
+//                 key={link.label}
+//                 href={isHomePage ? link.href : `/${link.href}`}
+//                 onClick={(e) => handleSmoothScroll(e, link.href.substring(1))}
+//                 className={`text-text text-lg font-medium px-4 py-3 rounded-xl border border-transparent 
+//                   hover:border-highlight hover:bg-highlight transition-colors flex items-center justify-between
+//                   ${index === navLinks.length - 1 ? 'bg-primary text-white hover:bg-primary hover:shadow-md' : 'bg-gray-50'}
+//                 `}
+//               >
+//                 {link.label}
+//                 <FaArrowRight className="text-sm opacity-70" />
+//               </a>
+//             ))}
+//           </nav>
+//         </div>
+//       )}
+//     </header>
+//   );
+// }
+

@@ -13,90 +13,120 @@ import Faq from "./components/Faq";
 import SponsorSection from './components/Sponsor';
 import Blog from './components/Blogs';
 
+// Improved observer setup with better performance options
 const observerOptions = {
   root: null,
-  rootMargin: '0px',
-  threshold: 0.1,
+  rootMargin: '50px 0px', // Preload elements before they come into view
+  threshold: 0.05, // Trigger earlier at just 5% visibility
 };
 
-const useOnScreen = (ref) => {
-  const [isIntersecting, setIntersecting] = React.useState(false);
+// Consolidated observer hook that tracks multiple refs
+const useSectionObserver = (refs) => {
+  const [visibleSections, setVisibleSections] = React.useState({});
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIntersecting(entry.isIntersecting);
-      },
-      observerOptions
-    );
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        // Once an element becomes visible, keep it visible
+        if (entry.isIntersecting) {
+          setVisibleSections(prev => ({
+            ...prev,
+            [entry.target.id]: true
+          }));
+        }
+      });
+    }, observerOptions);
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    // Observe all section refs
+    Object.entries(refs).forEach(([id, ref]) => {
+      if (ref.current) {
+        ref.current.id = id; // Ensure ID is set for the observer callback
+        observer.observe(ref.current);
+      }
+    });
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
+      // Clean up by unobserving all elements
+      Object.values(refs).forEach(ref => {
+        if (ref.current) {
+          observer.unobserve(ref.current);
+        }
+      });
     };
-  }, [ref]);
+  }, [refs]);
 
-  return isIntersecting;
+  return visibleSections;
 };
 
 export default function Home() {
-  const heroRef = useRef(null);
-  const visionRef = useRef(null);
-  const expertiseRef = useRef(null);
-  const productsRef = useRef(null);
-  const teamRef = useRef(null);
-  const contactRef = useRef(null);
-  const footerRef = useRef(null);
-  const faqsRef = useRef(null);
-  const sponsorRef = useRef(null);
-  const blogRef = useRef(null);
+  // Create all section refs
+  const sectionRefs = {
+    home: useRef(null),
+    about: useRef(null),
+    expertise: useRef(null),
+    sponsors: useRef(null),
+    products: useRef(null),
+    team: useRef(null),
+    blog: useRef(null),
+    faq: useRef(null),
+    contact: useRef(null),
+    footer: useRef(null),
+  };
 
-  const heroVisible = useOnScreen(heroRef);
-  const visionVisible = useOnScreen(visionRef);
-  const expertiseVisible = useOnScreen(expertiseRef);
-  const productsVisible = useOnScreen(productsRef);
-  const teamVisible = useOnScreen(teamRef);
-  const contactVisible = useOnScreen(contactRef);
-  const footerVisible = useOnScreen(footerRef);
-  const faqVisible = useOnScreen(faqsRef);
-  const SponsorVisible = useOnScreen(sponsorRef);
-  const blogVisible = useOnScreen(blogRef);
+  // Use a single observer for all sections
+  const visibleSections = useSectionObserver(sectionRefs);
+
   return (
     <main className="overflow-x-hidden">
       <Header />
-      <div id="home" ref={heroRef} className={`transition-opacity duration-400 ${heroVisible ? 'opacity-100' : 'opacity-0'}`}>
+      {/* Hero is visible immediately for better initial load experience */}
+      <div id="home" ref={sectionRefs.home} className="opacity-100">
         <Hero />
       </div>
-      <div id="about" ref={visionRef} className={`transition-opacity duration-500 ${visionVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      {/* Other sections fade in when they come into view */}
+      <div id="about" ref={sectionRefs.about} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.about ? 'opacity-100' : 'opacity-0'}`}>
         <Vision />
       </div>
-      <div id="expertise" ref={expertiseRef} className={`transition-opacity duration-500 ${expertiseVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      <div id="expertise" ref={sectionRefs.expertise} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.expertise ? 'opacity-100' : 'opacity-0'}`}>
         <Expertise />
       </div>
-      <div id="sponsors" ref={sponsorRef} className={`transition-opacity duration-500 ${SponsorVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      <div id="sponsors" ref={sectionRefs.sponsors} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.sponsors ? 'opacity-100' : 'opacity-0'}`}>
         <SponsorSection />
       </div>
-      <div id="products" ref={productsRef} className={`transition-opacity duration-500 ${productsVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      <div id="products" ref={sectionRefs.products} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.products ? 'opacity-100' : 'opacity-0'}`}>
         <Products />
       </div>
-      <div id="team" ref={teamRef} className={`transition-opacity duration-500 ${teamVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      <div id="team" ref={sectionRefs.team} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.team ? 'opacity-100' : 'opacity-0'}`}>
         <TeamSection />
       </div>
-      <div id="blog" ref={blogRef} className={`transition-opacity duration-500 ${blogVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      <div id="blog" ref={sectionRefs.blog} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.blog ? 'opacity-100' : 'opacity-0'}`}>
         <Blog />
       </div>
-      <div id="faq" ref={faqsRef} className={`transition-opacity duration-500 ${faqVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      <div id="faq" ref={sectionRefs.faq} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.faq ? 'opacity-100' : 'opacity-0'}`}>
         <Faq />
       </div>
-      <div id="contact" ref={contactRef} className={`transition-opacity duration-500 ${contactVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      <div id="contact" ref={sectionRefs.contact} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.contact ? 'opacity-100' : 'opacity-0'}`}>
         <Contact />
       </div>
-      <div id="footer"> {/*ref={footerRef} className={`transition-opacity duration-1000 ${footerVisible ? 'opacity-100' : 'opacity-0'}`} */}
+      
+      <div id="footer" ref={sectionRefs.footer} 
+           className={`transition-opacity duration-300 ease-in-out ${visibleSections.footer ? 'opacity-100' : 'opacity-0'}`}>
         <Footer />
       </div>
     </main>
