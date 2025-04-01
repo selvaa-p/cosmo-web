@@ -4,17 +4,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaArrowRight } from 'react-icons/fa';
 import Lottie from 'react-lottie';
-import animationData from './animation.json';
 
 export default function Hero() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 100);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const handleSmoothScroll = (e, targetId) => {
+      e.preventDefault();
+      if (typeof document !== "undefined") {
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    };    
   }, []);
 
   const handleSmoothScroll = (e, targetId) => {
@@ -28,7 +31,7 @@ export default function Hero() {
   const lottieOptions = {
     loop: true,
     autoplay: true,
-    animationData: animationData,
+    path: "/animation.json",
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice',
     },
