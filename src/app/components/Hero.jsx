@@ -3,12 +3,18 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaArrowRight } from 'react-icons/fa';
-import Lottie from 'react-lottie';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Lottie with no SSR to avoid document reference issues
+const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
 
 export default function Hero() {
   const [scrolled, setScrolled] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    
     if (typeof window !== "undefined") {
       const handleScroll = () => {
         setScrolled(window.scrollY > 100);
@@ -18,23 +24,43 @@ export default function Hero() {
     }
   }, []);
 
-  const lottieOptions = {
-    loop: true,
-    autoplay: true,
-    path: "/assets/animation.json", // Path to your animation file
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
+  // Define the missing handleSmoothScroll function
+  const handleSmoothScroll = (e, targetId) => {
+    e.preventDefault();
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
+  // Only show Lottie animation when client-side
+  const renderLottie = () => {
+    if (!isMounted) return null;
+    
+    const lottieOptions = {
+      loop: true,
+      autoplay: true,
+      path: "/assets/animation.json", // Path to your animation file
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+      },
+    };
+    
+    return (
+      <Lottie 
+        options={lottieOptions} 
+        isClickToPauseDisabled={true}
+      />
+    );
   };
 
   return (
     <section className="relative h-screen overflow-hidden bg-gradient-to-br from-white via-amber-50 to-amber-100">
       {/* Background Animation - positioned as an accent rather than covering content */}
       <div className="absolute top-0 right-0 w-1/2 h-full opacity-40 pointer-events-none">
-        <Lottie 
-          options={lottieOptions} 
-          isClickToPauseDisabled={true}
-        />
+        {isMounted && renderLottie()}
       </div>
       
       {/* Decorative elements */}
@@ -88,12 +114,7 @@ export default function Hero() {
             <div className="relative w-full max-w-md aspect-square">
               <div className="absolute inset-0 bg-gradient-to-br from-amber-200 to-orange-300 rounded-full opacity-20 blur-xl"></div>
               <div className="relative h-full w-full flex items-center justify-center">
-                <Lottie 
-                  options={lottieOptions} 
-                  height="100%"
-                  width="100%"
-                  isClickToPauseDisabled={true}
-                />
+                {isMounted && renderLottie()}
               </div>
             </div>
           </div>
