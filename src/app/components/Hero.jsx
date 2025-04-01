@@ -1,15 +1,17 @@
-// src\app\components\Hero.jsx
 "use client";
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaArrowRight } from 'react-icons/fa';
+import Lottie from 'react-lottie';
+import animationData from '../../../public/assets/animation.json';
 
 export default function Hero() {
   const [scrolled, setScrolled] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > window.innerHeight - 100);
+      setScrolled(window.scrollY > 100);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -23,23 +25,174 @@ export default function Hero() {
     }
   };
 
+  const lottieOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
   return (
-    <section
-      className="h-screen flex flex-col items-center justify-center text-center p-6 pt-20"
-      style={{ background: "linear-gradient(135deg, #F4E6D6, #F1B474)",  backgroundSize: 'cover', backgroundPosition: 'center' }}
-    >
-      <Image src="/assets/logo.png" alt="Company Logo" width={300} height={300} priority={false}/>
-      <br></br>
-      <br></br>
-      <button>
-        <Link
-          href="#about"
-          onClick={(e) => handleSmoothScroll(e, "about")}
-          className="bg-transparent text-[#270c00] border-2 border-[#270c00] px-6 py-2 font-medium text-lg tracking-wider flex items-center justify-center rounded-full transition-colors hover:bg-primary hover:text-black "
-        >
-          Get Started <FaArrowRight className="ml-2" />
-        </Link>
-      </button>
+    <section className="relative h-screen overflow-hidden bg-gradient-to-br from-white via-amber-50 to-amber-100">
+      {/* Background Animation - positioned as an accent rather than covering content */}
+      <div className="absolute top-0 right-0 w-1/2 h-full opacity-40 pointer-events-none">
+        <Lottie 
+          options={lottieOptions} 
+          isClickToPauseDisabled={true}
+        />
+      </div>
+      
+      {/* Decorative elements */}
+      <div className="absolute -left-24 top-24 w-64 h-64 rounded-full bg-amber-200 opacity-20 blur-3xl"></div>
+      <div className="absolute -right-24 bottom-24 w-80 h-80 rounded-full bg-orange-200 opacity-30 blur-3xl"></div>
+      
+      {/* Content Container */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 md:px-12 max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row items-center justify-between w-full gap-8">
+          {/* Left side - Content */}
+          <div className="text-left w-full md:w-1/2 space-y-6">
+            <Image 
+              src="/assets/logo.png" 
+              alt="Company Logo" 
+              width={200} 
+              height={200} 
+              priority={true}
+              className="mb-6"
+            />
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-amber-900 leading-tight">
+              Create Something <span className="text-orange-500">Extraordinary</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-amber-800 max-w-lg">
+              Elevate your digital experience with our innovative solutions designed for the modern world.
+            </p>
+            
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Link
+                href="#about"
+                onClick={(e) => handleSmoothScroll(e, "about")}
+                className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-3 rounded-full font-medium text-lg flex items-center group transition-all duration-300 hover:shadow-lg hover:shadow-amber-200"
+              >
+                Get Started 
+                <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              
+              <Link
+                href="#expertise"
+                onClick={(e) => handleSmoothScroll(e, "expertise")}
+                className="bg-transparent text-amber-800 border-2 border-amber-400 px-8 py-3 rounded-full font-medium text-lg hover:bg-amber-400 hover:text-amber-900 transition-colors duration-300"
+              >
+                Our Services
+              </Link>
+            </div>
+          </div>
+          
+          {/* Right side - Visual element */}
+          <div className="w-full md:w-1/2 flex justify-center items-center">
+            <div className="relative w-full max-w-md aspect-square">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-200 to-orange-300 rounded-full opacity-20 blur-xl"></div>
+              <div className="relative h-full w-full flex items-center justify-center">
+                <Lottie 
+                  options={lottieOptions} 
+                  height="100%"
+                  width="100%"
+                  isClickToPauseDisabled={true}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Scroll indicator */}
+        <div className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-opacity duration-500 ${scrolled ? 'opacity-0' : 'opacity-100'}`}>
+          <div className="w-8 h-12 rounded-full border-2 border-amber-600 flex justify-center p-2">
+            <div className="w-1 h-3 bg-amber-600 rounded-full animate-bounce"></div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
+
+// OLD HERO
+// "use client";
+// import React, { useState, useEffect, useRef } from 'react';
+// import Image from 'next/image';
+// import Link from 'next/link';
+// import { FaArrowRight } from 'react-icons/fa';
+// import Lottie from 'react-lottie';
+// import animationData from '../../../public/assets/animation.json';
+
+// export default function Hero() {
+//   const [scrolled, setScrolled] = useState(false);
+//   const lottieRef = useRef();
+
+//   useEffect(() => {
+//     const handleScroll = () => {
+//       setScrolled(window.scrollY > window.innerHeight - 100);
+//     };
+//     window.addEventListener("scroll", handleScroll);
+//     return () => window.removeEventListener("scroll", handleScroll);
+//   }, []);
+
+//   const handleSmoothScroll = (e, targetId) => {
+//     e.preventDefault();
+//     const target = document.getElementById(targetId);
+//     if (target) {
+//       target.scrollIntoView({ behavior: "smooth", block: "start" });
+//     }
+//   };
+
+//   const lottieOptions = {
+//     loop: true,
+//     autoplay: true,
+//     animationData: animationData,
+//     rendererSettings: {
+//       preserveAspectRatio: 'xMidYMid slice',
+//     },
+//   };
+
+//   return (
+//     <section
+//       className="h-screen flex flex-col items-center justify-center text-center p-6 pt-20 relative overflow-hidden"
+//       style={{ background: "linear-gradient(135deg, 
+// #F4E6D6, 
+// #F1B474)" }}
+//     >
+//       {/* Lottie Animation as Background */}
+//       <div
+//         className="absolute"
+//         style={{
+//           top: '50%',
+//           left: '50%',
+//           transform: 'translate(-50%, -50%)',
+//           width: '50%', // Adjust width as needed to reduce size.
+//           height: '50%', // Adjust height as needed to reduce size.
+//         }}
+//       >
+//         <Lottie options={lottieOptions} isStopped={false} isPaused={false} lottieRef={lottieRef} />
+//       </div>
+
+//       {/* Content */}
+//       <div className="relative z-10">
+//         <Image src="/assets/logo.png" alt="Company Logo" width={300} height={300} priority={false} />
+//         <br />
+//         <br />
+//         <button className="group">
+//           <Link
+//             href="#about"
+//             onClick={(e) => handleSmoothScroll(e, "about")}
+//             className="bg-transparent text-[
+// #270c00] border-2 border-[
+// #270c00] px-6 py-2 font-medium text-lg tracking-wider flex items-center justify-center rounded-full transition-colors hover:bg-gradient-to-r from-primary to-secondary hover:text-white hover:border-transparent"
+//           >
+//             Get Started <FaArrowRight className="ml-2" />
+//           </Link>
+//         </button>
+//       </div>
+//     </section>
+//   );
+// }
