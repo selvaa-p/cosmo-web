@@ -107,22 +107,41 @@ const handleSubmit = async (e) => {
       <div className="absolute bottom-0 right-0 w-40 md:w-80 h-40 md:h-80 bg-red-100 rounded-full opacity-20 translate-x-1/3 translate-y-1/3"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        {/* Status Messages */}
-        {submitStatus === 'success' && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-            Thank you! Your message has been sent successfully.
+        {/* Status Messages - Modified to appear as a centered mini window */}
+        {submitStatus && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="absolute inset-0 bg-black bg-opacity-30" onClick={() => setSubmitStatus(null)}></div>
+            <div className={`relative px-6 py-4 rounded-lg shadow-lg text-center max-w-md mx-auto transform transition-all duration-300 ${
+              submitStatus === 'success' ? 'bg-green-100 border border-green-400 text-green-700' : 
+              'bg-red-100 border border-red-400 text-red-700'
+            }`}>
+              <button 
+                onClick={() => setSubmitStatus(null)} 
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+              <div className="flex flex-col items-center">
+                <div className={`w-12 h-12 rounded-full mb-4 flex items-center justify-center ${
+                  submitStatus === 'success' ? 'bg-green-200' : 'bg-red-200'
+                }`}>
+                  {submitStatus === 'success' ? (
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  ) : (
+                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  )}
+                </div>
+                <p className="font-medium">
+                  {submitStatus === 'success' ? 'Inquiry received! Our team will contact you within 24 hours.' : 'Something went wrong! Please try again or contact us directly at cosmohentorq@gmail.com'}
+                </p>
+              </div>
+            </div>
           </div>
         )}
-        {submitStatus === 'error' && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-            Oops! Something went wrong. Please try again.
-          </div>
-        )}
-        <div className="text-center mb-12 md:mb-16">
-          <span className="text-custom-red font-medium text-sm uppercase tracking-wider">Get in Touch</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-text mt-2 mb-4">Contact Us</h2>
-          <div className="w-24 h-1 bg-custom-red mx-auto rounded-full"></div>
-        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start max-w-5xl mx-auto">
           {/* Contact Info Section */}
