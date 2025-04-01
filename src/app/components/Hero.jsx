@@ -9,29 +9,19 @@ export default function Hero() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleSmoothScroll = (e, targetId) => {
-      e.preventDefault();
-      if (typeof document !== "undefined") {
-        const target = document.getElementById(targetId);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }
-    };    
-  }, []);
-
-  const handleSmoothScroll = (e, targetId) => {
-    e.preventDefault();
-    const target = document.getElementById(targetId);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof window !== "undefined") {
+      const handleScroll = () => {
+        setScrolled(window.scrollY > 100);
+      };
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
     }
-  };
+  }, []);
 
   const lottieOptions = {
     loop: true,
     autoplay: true,
-    path: "/animation.json",
+    path: "/assets/animation.json", // Path to your animation file
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice',
     },
