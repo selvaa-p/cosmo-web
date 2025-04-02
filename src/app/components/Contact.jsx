@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import 'tailwindcss/tailwind.css';
 import { FaArrowRight, FaEnvelope, FaMapMarkerAlt, FaPhoneAlt} from 'react-icons/fa';
+
 export default function Contact() {
   useEffect(() => {
     // Fix the animation issue by using direct class manipulation
@@ -28,7 +29,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    subject: '', // No default value
     message: ''
   });
   const [submitStatus, setSubmitStatus] = useState(null);
@@ -38,6 +39,9 @@ export default function Contact() {
   const [captchaToken, setCaptchaToken] = useState(null);
   const [captchaError, setCaptchaError] = useState(false);
 
+  // Subject options for dropdown
+  const subjectOptions = ['J.U.L.I.E', 'H.A.K', 'Y.A.K.O', 'P.U.L.S.A.R', 'Other'];
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData(prevState => ({
@@ -46,27 +50,26 @@ export default function Contact() {
     }));
   };
 
-// Captcha handler
-const handleCaptchaChange = (token) => {
-  setCaptchaToken(token);
-  setCaptchaError(false);
-};
+  // Captcha handler
+  const handleCaptchaChange = (token) => {
+    setCaptchaToken(token);
+    setCaptchaError(false);
+  };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  // Validate captcha first
-  if (!captchaToken) {
-    setCaptchaError(true);
-    return;
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate captcha first
+    if (!captchaToken) {
+      setCaptchaError(true);
+      return;
+    }
 
-  setIsSubmitting(true);
-  setSubmitStatus(null);
-
+    setIsSubmitting(true);
+    setSubmitStatus(null);
 
     try {
-      // Use your actual API routesss
+      // Use your actual API routes
       const response = await fetch('/api/submit-contact', {
         method: 'POST',
         headers: {
@@ -86,7 +89,7 @@ const handleSubmit = async (e) => {
         setFormData({
           name: '',
           email: '',
-          subject: '',
+          subject: '', // Reset to empty
           message: ''
         });
         setCaptchaToken(null);
@@ -100,6 +103,7 @@ const handleSubmit = async (e) => {
       setIsSubmitting(false);
     }
   };
+
   return (
     <section id="contact" className="py-16 md:py-20 bg-gradient-to-b from-background to-gray-50 relative overflow-hidden">
       {/* Background decorative elements */}
@@ -143,6 +147,12 @@ const handleSubmit = async (e) => {
           </div>
         )}
         
+        <div className="text-center mb-12 md:mb-16">
+           <span className="text-custom-red font-medium text-sm uppercase tracking-wider">Get in Touch</span>
+           <h2 className="text-3xl md:text-4xl font-bold text-text mt-2 mb-4">Contact Us</h2>
+           <div className="w-24 h-1 bg-custom-red mx-auto rounded-full"></div>
+         </div>
+         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start max-w-5xl mx-auto">
           {/* Contact Info Section */}
           <div 
@@ -205,7 +215,7 @@ const handleSubmit = async (e) => {
           </div>
           
           {/* Contact Form */}
-          <div id="contact-form" className="bg-white rounded-2xl shadow-xl p-6 md:p-8 h-full flex flex-col">
+          <div id="contact-form" className="bg-white rounded-2xl shadow-xl p-6 md:p-8 h-full flex flex-col transform transition-all duration-700 opacity-0 translate-y-8">
             <h3 className="text-xl md:text-2xl font-bold text-text mb-6 border-b pb-4">Send us a message</h3>
             
             <form onSubmit={handleSubmit} className="flex flex-col justify-between h-full">
@@ -234,17 +244,24 @@ const handleSubmit = async (e) => {
                   />
                 </div>
                 
+                {/* Subject dropdown menu - Replaced text input */}
                 <div className="relative">
-                  <input 
-                    type="text" 
-                    className="w-full p-3 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-red/50 transition-all text-text placeholder-gray-500" 
-                    placeholder="Subject" 
+                  <select
+                    className="w-full p-3 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-red/50 transition-all text-gray-500"
                     id="subject"
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                  />
-                </div>               
+                  >
+                    <option value="" disabled>Select a subject</option>
+                    {subjectOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
                 <div className="relative">
                   <textarea 
                     className="w-full p-3 bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-red/50 transition-all text-text placeholder-gray-500" 
@@ -256,6 +273,7 @@ const handleSubmit = async (e) => {
                     required
                   ></textarea>
                 </div>
+
                 {/* Captcha Section */}
                 <div className="flex justify-center">
                   <ReCAPTCHA
@@ -271,6 +289,7 @@ const handleSubmit = async (e) => {
                   </div>
                 )}
               </div>
+
               <div className="mt-4">
                 <button 
                   type="submit" 
@@ -291,4 +310,3 @@ const handleSubmit = async (e) => {
     </section>
   );
 }
-
