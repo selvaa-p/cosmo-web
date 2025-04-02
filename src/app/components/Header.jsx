@@ -6,12 +6,6 @@ import Link from 'next/link';
 import { FaBars, FaTimes, FaArrowRight, FaChevronDown } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 
-const handleLogoClick = (e) => {
-  e.preventDefault();
-  window.location.href = '/';
-  window.location.reload('/');
-}; 
-
 export default function Header({ alwaysSolid = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,6 +13,23 @@ export default function Header({ alwaysSolid = false }) {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const dropdownRef = useRef(null);
+
+  // Force full page reload when logo is clicked and ensure redirection to hero section
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    // Set the location to root path with no hash to ensure landing on hero section
+    window.location.href = '/';
+    
+    // Force a complete page reload
+    setTimeout(() => {
+      window.location.reload(true);
+      
+      // After reload, ensure we're at the top of the page (hero section)
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 100);
+    }, 0);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,7 +97,8 @@ export default function Header({ alwaysSolid = false }) {
       <div className="container mx-auto px-4 flex justify-between items-center h-full">
         {/* Logo Section with Enhanced Styling */}
         <div className="flex items-center">
-          <Link href="/" onClick={handleLogoClick}>
+          {/* Using a standard anchor tag for more control over reload behavior */}
+          <a href="/" onClick={handleLogoClick}>
             <div className="flex items-center group">
               <div className="relative overflow-hidden rounded-full bg-gradient-to-r from-blue-100 to-white p-1.5 shadow-md transition-all duration-300 group-hover:shadow-lg">
                 <Image
@@ -102,7 +114,7 @@ export default function Header({ alwaysSolid = false }) {
                 COSMOHENTORQ <span className="font-light">INNOVATIONS</span>
               </h1>
             </div>
-          </Link>
+          </a>
         </div>
        
         {/* Desktop Navigation with Improved Glass Morphism */}
@@ -214,8 +226,6 @@ export default function Header({ alwaysSolid = false }) {
     </header>
   );
 }
-
-
 
 // TIME:2025-03-31 12:43 PM
 // "use client";
