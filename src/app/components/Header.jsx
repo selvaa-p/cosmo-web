@@ -34,7 +34,7 @@ export default function Header({ alwaysSolid = false }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > window.innerHeight - 100);
+      setScrolled(window.scrollY > 20);
     };
     if (!alwaysSolid) {
       window.addEventListener("scroll", handleScroll);
