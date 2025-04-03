@@ -34,7 +34,7 @@ const productsData = [
     name: "Yet to Name",
     image: "/assets/lastj-Photoroom.jpg",
     description: "Arriving Soon...",
-    link: "/products/coming-soon"
+    link: "/products/new"
   },
 ];
 
