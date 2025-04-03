@@ -75,8 +75,6 @@ export default function Hero() {
         {isMounted && renderLottie()}
       </div>
       
-      
-      
       {/* Content Container */}
       <div className="relative z-10 flex flex-col items-start justify-center min-h-screen px-4 sm:px-6 md:px-12 max-w-6xl mx-auto py-12 sm:py-0">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full gap-6 md:gap-8">
