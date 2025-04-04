@@ -10,7 +10,6 @@ import Header from "./components/Header";
 import Contact from "./components/Contact";
 import TeamSection from "./components/TeamSection";
 import Faq from "./components/Faq";
-import SponsorSection from './components/Sponsor';
 import Blog from './components/Blogs';
 
 // Improved observer setup with better performance options
@@ -64,7 +63,6 @@ export default function Home() {
     home: useRef(null),
     about: useRef(null),
     expertise: useRef(null),
-    sponsors: useRef(null),
     products: useRef(null),
     team: useRef(null),
     blog: useRef(null),
@@ -93,11 +91,6 @@ export default function Home() {
       <div id="expertise" ref={sectionRefs.expertise} 
            className={`transition-opacity duration-300 ease-in-out ${visibleSections.expertise ? 'opacity-100' : 'opacity-0'}`}>
         <Expertise />
-      </div>
-      
-      <div id="sponsors" ref={sectionRefs.sponsors} 
-           className={`transition-opacity duration-300 ease-in-out ${visibleSections.sponsors ? 'opacity-100' : 'opacity-0'}`}>
-        <SponsorSection />
       </div>
       
       <div id="products" ref={sectionRefs.products} 
