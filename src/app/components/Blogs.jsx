@@ -59,8 +59,8 @@ const BlogCard = React.memo(({ post, index, isInView }) => {
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
           />
         </div>
-        <div className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-white p-1.5 sm:p-2 rounded-full shadow-md">
-          <div className="text-custom-red w-4 h-4 sm:w-5 sm:h-5">
+        <div className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-white p-1.5 sm:p-2 rounded-full shadow-md flex items-center justify-center">
+          <div className="text-custom-red w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
             {post.iconComponent}
           </div>
         </div>

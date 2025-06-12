@@ -248,7 +248,7 @@ export const blogPosts = [
     id: 'cloud-computing',
     title: 'Cloud Computing: Scaling Your Business Infrastructure',
     excerpt: 'Learn how cloud computing solutions can provide scalable, secure, and cost-effective infrastructure options for businesses of all sizes.',
-    image: '/assets/blog/cloud.jpeg',
+    image: '/assets/blog/cloudclear.jpeg',
     coverImage: '/assets/blog/cloud-cover.avif',
     icon: 'Cloud',
     iconComponent: <Cloud className="w-8 h-8" />,
@@ -256,7 +256,7 @@ export const blogPosts = [
     date: 'March 10, 2025',
     readTime: '7 min read',
     author: {
-      name: 'Leo Binso',
+      name: 'Leo',
       avatar: '/assets/leo.jpg',
       role: 'Cloud Solutions Architect'
     },
