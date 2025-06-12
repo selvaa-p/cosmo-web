@@ -116,7 +116,7 @@ export async function POST(req) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const emailResponse = await resend.emails.send({
       from: 'ClientResponse <onboarding@resend.dev>',
-      to: ['sit22it123@sairamtap.edu.in'],
+      to: ['cosmohentorq@gmail.com'],
       subject: `New Contact Form: ${subject}`,
       html: `<h1>New Contact Form Submission</h1>
       <p><strong>Name:</strong> ${name}</p>
